@@ -42,7 +42,7 @@ def buscar_virus(termo: str, bd:str, limite:int):
         "retmode": "xml"
      }
            
-        resposta_fetch = requests.get(url_fetch, params=params_fetch)
+        resposta_fetch = requests.get(url_fetch, params=params_fetch,headers={"Accept-Encoding": "identity"})
 
         if bd == "taxonomy":
             root = ET.fromstring(resposta_fetch.text)
@@ -89,7 +89,7 @@ app = FastAPI()
 
 @app.get("/")
 def hello():
-    return {"mensagem": "olá, pesquise o vírus e receba suas informções"}
+    return {"mensagem": "olá, pesquise o vírus e receba suas informações"}
 
 @app.get("/virus/{nome}")
 def rota_buscar_virus(nome: str):
