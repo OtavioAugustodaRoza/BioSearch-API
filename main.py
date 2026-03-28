@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import requests
 import xml.etree.ElementTree as ET
 from enum import Enum
+import time
 
 class BancoDados(str, Enum):
     taxonomia = "taxonomy"
@@ -46,6 +47,9 @@ def buscar_virus(termo: str, bd:str, limite:int):
         print("STATUS:", resposta_fetch.status_code)
         print("CONTENT:", resposta_fetch.text[:200])
 
+        if resposta_fetch.status_code == 429:
+         informacoes.append({"erro": "limite de requisições atingido"})
+         continue 
         if bd == "taxonomy":
             root = ET.fromstring(resposta_fetch.text)
             taxon = root.find("Taxon")
@@ -83,6 +87,7 @@ def buscar_virus(termo: str, bd:str, limite:int):
           informacoes_do_virus = {"resultado": resposta_fetch.text}
 
         informacoes.append(informacoes_do_virus)
+        time.sleep(0.4)
     return  informacoes
   
 
