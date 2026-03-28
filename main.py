@@ -44,8 +44,6 @@ def buscar_virus(termo: str, bd:str, limite:int):
      }
            
         resposta_fetch = requests.get(url_fetch, params=params_fetch,headers={"Accept-Encoding": "identity"})
-        print("STATUS:", resposta_fetch.status_code)
-        print("CONTENT:", resposta_fetch.text[:200])
 
         if resposta_fetch.status_code == 429:
          informacoes.append({"erro": "limite de requisições atingido"})
