@@ -13,7 +13,7 @@ Permite buscar informações nos bancos: taxonomy, pubmed, gene e protein.
 
 1. Clonar o repositório
 ```
-git clone https://github.com/OtavioAugustodaRoza/fastApi.git
+git clone https://github.com/OtavioAugustodaRoza/BioSearch-API.git
 ```
 
 2. Entrar na pasta
