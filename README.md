@@ -18,7 +18,7 @@ git clone https://github.com/OtavioAugustodaRoza/BioSearch-API.git
 
 2. Entrar na pasta
 ```
-cd fastApi
+cd BioSearch-API
 ```
 
 3. Criar e ativar a venv
