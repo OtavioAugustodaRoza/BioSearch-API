@@ -4,6 +4,12 @@ import xml.etree.ElementTree as ET
 from enum import Enum
 import time
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+API_KEY = os.getenv("NCBI_API_KEY")
 
 
 
