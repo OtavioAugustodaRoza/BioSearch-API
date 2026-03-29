@@ -3,6 +3,16 @@ import requests
 import xml.etree.ElementTree as ET
 from enum import Enum
 import time
+from fastapi.middleware.cors import CORSMiddleware
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class BancoDados(str, Enum):
     taxonomia = "taxonomy"
