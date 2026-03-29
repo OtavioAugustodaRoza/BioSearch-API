@@ -6,13 +6,6 @@ import time
 from fastapi.middleware.cors import CORSMiddleware
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 class BancoDados(str, Enum):
     taxonomia = "taxonomy"
@@ -101,6 +94,14 @@ def buscar_virus(termo: str, bd:str, limite:int):
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def hello():
