@@ -52,7 +52,7 @@ async def buscar_virus(termo: str, bd:str, limite:int):
       
 
        if not ids:
-         return
+         return []
     
        tarefas = [buscar_item(id, bd, cliente) for id in ids]
        respostas= await asyncio.gather(*tarefas)
@@ -62,26 +62,27 @@ async def buscar_virus(termo: str, bd:str, limite:int):
     return  informacoes
 
 def parsear(resposta,bd):
-       if resposta.status_code == 429:
-        return {"erro": "limite de requisições atingido"}
-    
-       if bd == "taxonomy":
-         root = ET.fromstring(resposta.text)
-         taxon = root.find("Taxon")
-         return {
+       if resposta.status_code != 200:
+         return {"erro": f"status {resposta.status_code}"}
+     
+       try:
+         if bd == "taxonomy":
+          root = ET.fromstring(resposta.text)
+          taxon = root.find("Taxon")
+          return {
             "nome_cientifico": taxon.findtext("ScientificName"),
             "rank": taxon.findtext("Rank"),
             "linhagem": taxon.findtext("Lineage"),
         }
-       elif bd == "protein":
-          root = ET.fromstring(resposta.text)
-          GBSEQ = root.find("GBSeq")
-          return {
+         elif bd == "protein":
+           root = ET.fromstring(resposta.text)
+           GBSEQ = root.find("GBSeq")
+           return {
             "organismo": GBSEQ.findtext("GBSeq_organism"),
             "definicao": GBSEQ.findtext("GBSeq_definition"),
             "taxonomia": GBSEQ.findtext("GBSeq_taxonomy"),
         }
-       elif bd == "gene":
+         elif bd == "gene":
             root = ET.fromstring(resposta.text)
             gene = root.find("Entrezgene")
             return {
@@ -89,16 +90,18 @@ def parsear(resposta,bd):
             "definicao": gene.findtext("Entrezgene_gene/Gene-ref/Gene-ref_desc"),
             "organismo": gene.findtext("Entrezgene_source/BioSource/BioSource_org/Org-ref/Org-ref_taxname"),
             }
-       elif bd == "pubmed":
-        root = ET.fromstring(resposta.text)
-        pubmed = root.find("PubmedArticle")
-        return {
+         elif bd == "pubmed":
+           root = ET.fromstring(resposta.text)
+           pubmed = root.find("PubmedArticle")
+           return {
             "titulo": pubmed.findtext("MedlineCitation/Article/ArticleTitle"),
             "journal": pubmed.findtext("MedlineCitation/Article/Journal/Title"),
             "resumo": pubmed.findtext("MedlineCitation/Article/Abstract/AbstractText"),
         }
-       else:
-         return {"resultado": resposta.text}
+         else:
+           return {"resultado": resposta.text}
+       except Exception as e:
+          return {"erro": f"falha no parse: {str(e)}"}       
 
 
 app = FastAPI()
