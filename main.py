@@ -21,6 +21,7 @@ class BancoDados(str, Enum):
     
     
 async def buscar_item(id:str , bd: str, client: httpx.AsyncClient):
+    await asyncio.sleep(0.1)
     url_fetch = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
     params_fetch = {
         "db": bd,
@@ -33,6 +34,7 @@ async def buscar_item(id:str , bd: str, client: httpx.AsyncClient):
     return resposta
 
 async def buscar_virus(termo: str, bd:str, limite:int):
+   
     async with httpx.AsyncClient() as cliente:
        bd = bd.value
         
