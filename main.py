@@ -29,10 +29,12 @@ async def buscar_item(id:str , bd: str, client: httpx.AsyncClient):
         "api_key": API_KEY
     }  
     resposta = await client.get(url_fetch, params=params_fetch, headers={"Accept-Encoding": "identity"})
+    
     return resposta
 
 async def buscar_virus(termo: str, bd:str, limite:int):
     async with httpx.AsyncClient() as cliente:
+       bd = bd.value
         
        url_search = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
        params_search = {
@@ -47,10 +49,9 @@ async def buscar_virus(termo: str, bd:str, limite:int):
        ids = resultado["idlist"]   
        ids = ids[:limite] 
 
-       print("IDs encontrados:", ids)
+      
 
        if not ids:
-         print("Nenhum resultado encontrado.")
          return
     
        tarefas = [buscar_item(id, bd, cliente) for id in ids]
@@ -84,17 +85,17 @@ def parsear(resposta,bd):
             root = ET.fromstring(resposta.text)
             gene = root.find("Entrezgene")
             return {
-            "locus": gene.find("Entrezgene_gene/Gene-ref/Gene-ref_locus").text,
-            "definicao": gene.find("Entrezgene_gene/Gene-ref/Gene-ref_desc").text,
-            "organismo": gene.find("Entrezgene_source/BioSource/BioSource_org/Org-ref/Org-ref_taxname").text,
+            "locus": gene.findtext("Entrezgene_gene/Gene-ref/Gene-ref_locus"),
+            "definicao": gene.findtext("Entrezgene_gene/Gene-ref/Gene-ref_desc"),
+            "organismo": gene.findtext("Entrezgene_source/BioSource/BioSource_org/Org-ref/Org-ref_taxname"),
             }
        elif bd == "pubmed":
         root = ET.fromstring(resposta.text)
         pubmed = root.find("PubmedArticle")
         return {
-            "titulo": pubmed.find("MedlineCitation/Article/ArticleTitle").text,
-            "journal": pubmed.find("MedlineCitation/Article/Journal/Title").text,
-            "resumo": pubmed.find("MedlineCitation/Article/Abstract/AbstractText").text,
+            "titulo": pubmed.findtext("MedlineCitation/Article/ArticleTitle"),
+            "journal": pubmed.findtext("MedlineCitation/Article/Journal/Title"),
+            "resumo": pubmed.findtext("MedlineCitation/Article/Abstract/AbstractText"),
         }
        else:
          return {"resultado": resposta.text}
