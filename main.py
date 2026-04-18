@@ -42,8 +42,7 @@ async def buscar_virus(termo: str, bd:str, limite:int):
        params_search = {
         "db": bd,
         "term": termo,
-        "retmode": "json",
-        "usehistory": "y"  
+        "retmode": "json",  
       }
        resposta_search = await cliente.get(url_search, params=params_search)
        resultado = resposta_search.json()["esearchresult"]
