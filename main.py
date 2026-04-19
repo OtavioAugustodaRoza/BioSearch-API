@@ -126,3 +126,7 @@ async def rota_buscar_virus(nome: str):
 @app.get("/busca")
 async def rota_buscar(q: str, db: BancoDados, limite: int = 5):
     return await buscar_virus(q, db, limite)
+  
+from database import engine
+import models
+models.Base.metadata.create_all(bind=engine)  
